@@ -371,6 +371,10 @@ class ScoutSuiteArgumentParser:
                             type=int,
                             default=8000,
                             help="[EXPERIMENTAL FEATURE] Port on which you want the server to listen. Defaults to 8000.")
+        parser.add_argument('--plot-resources-to-json',
+                            dest='plot_resources_to_json',
+                            default=None,
+                            help='Plot resources to a given json file (and skip processing)')
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)

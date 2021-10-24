@@ -2,6 +2,7 @@ import asyncio
 import copy
 import os
 import webbrowser
+import json
 
 from asyncio_throttle import Throttler
 from ScoutSuite import ERRORS_LIST
@@ -74,7 +75,8 @@ def run_from_cli():
                    quiet=args.get('quiet'),
                    log_file=args.get('log_file'),
                    no_browser=args.get('no_browser'),
-                   programmatic_execution=False)
+                   programmatic_execution=False,
+                   json_resources_file = args.get('plot_resources_to_json'))
     except (KeyboardInterrupt, SystemExit):
         print_info('Exiting')
         return 130
@@ -117,7 +119,8 @@ def run(provider,
         quiet=False,
         log_file=None,
         no_browser=False,
-        programmatic_execution=True):
+        programmatic_execution=True,
+        json_resources_file=None):
     """
     Run a scout job in an async event loop.
     """
@@ -167,8 +170,8 @@ async def _run(provider,
                quiet,
                log_file,
                no_browser,
-               programmatic_execution,
-               **kwargs):
+               json_resources_file,
+               programmatic_execution,               **kwargs):
     """
     Run a scout job.
     """
@@ -299,6 +302,13 @@ async def _run(provider,
     except Exception as e:
         print_exception('Failure while running pre-processing engine: {}'.format(e))
         return 105
+
+    # plot_resources_to_json
+    if json_resources_file is not None:
+        print_info('Writing Json file: "{}"'.format(json_resources_file))
+        with open(json_resources_file, 'w') as outfile:
+            json.dump(cloud_provider.services, outfile)
+        return 0
 
     # Analyze config
     try:
