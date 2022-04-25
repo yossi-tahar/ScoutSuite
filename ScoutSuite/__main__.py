@@ -309,7 +309,7 @@ async def _run(provider,
     # plot_resources_to_json
     if json_resources_file is not None:
         print_info('Writing Json file: "{}"'.format(json_resources_file))
-        with open(json_resources_file, 'w') as outfile:
+        with open(json_resources_file, 'w+') as outfile:
             json.dump(cloud_provider.services, outfile)
         return 0
 
